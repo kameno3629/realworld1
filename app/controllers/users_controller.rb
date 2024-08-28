@@ -6,7 +6,14 @@ class UsersController < ApplicationController
   def create
     @user = User.new(user_params)
     if @user.save
-      render json: @user, status: :created
+      # ユーザー登録が成功した場合、ユーザー情報とトークンを含むレスポンスを返す
+      render json: {
+        email: @user.email,
+        username: @user.username,
+        bio: @user.bio,
+        image: @user.image,
+        token: @user.generate_jwt
+      }, status: :created
     else
       render json: { errors: @user.errors.full_messages }, status: :unprocessable_entity
     end
@@ -16,8 +23,14 @@ class UsersController < ApplicationController
   def login
     @user = User.find_by(email: user_params[:email])
     if @user&.authenticate(user_params[:password])
-      # トークン発行やセッション管理などの処理をここに記述
-      render json: @user
+      # ログイン成功時、ユーザー情報とトークンを含むレスポンスを返す
+      render json: {
+        email: @user.email,
+        username: @user.username,
+        bio: @user.bio,
+        image: @user.image,
+        token: @user.generate_jwt
+      }
     else
       render json: { errors: ['Invalid email or password'] }, status: :unauthorized
     end

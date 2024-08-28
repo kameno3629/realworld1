@@ -6,7 +6,7 @@ class Article < ActiveRecord::Base
   scope :authored_by, ->(username) { where(user: User.where(username: username)) }
   scope :favorited_by, -> (username) { joins(:favorites).where(favorites: { user: User.where(username: username) }) }
 
-  acts_as_taggable
+  acts_as_taggable_on :tags
 
   validates :title, presence: true, allow_blank: false
   validates :body, presence: true, allow_blank: false
@@ -16,5 +16,13 @@ class Article < ActiveRecord::Base
 
   before_validation do
     self.slug ||= "#{title.to_s.parameterize}-#{rand(36**6).to_s(36)}"
+  end
+
+  def favorited_by?(user)
+    favorites.exists?(user: user)
+  end
+
+  def description
+    body[0..100]
   end
 end
