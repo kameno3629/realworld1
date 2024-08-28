@@ -11,6 +11,7 @@ class ArticlesController < ApplicationController
     @articles_count = @articles.count
 
     @articles = @articles.order(created_at: :desc).offset(params[:offset] || 0).limit(params[:limit] || 20)
+    render json: @articles
   end
 
   def feed
@@ -19,8 +20,7 @@ class ArticlesController < ApplicationController
     @articles_count = @articles.count
 
     @articles = @articles.order(created_at: :desc).offset(params[:offset] || 0).limit(params[:limit] || 20)
-
-    render :index
+    render json: @articles
   end
 
   def create
@@ -28,7 +28,7 @@ class ArticlesController < ApplicationController
     @article.user = current_user
 
     if @article.save
-      render :show
+      render json: @article, status: :created
     else
       render json: { errors: @article.errors }, status: :unprocessable_entity
     end
@@ -41,15 +41,18 @@ class ArticlesController < ApplicationController
 
   def show
     @article = Article.find_by_slug!(params[:slug])
+    render json: @article
   end
 
   def update
     @article = Article.find_by_slug!(params[:slug])
 
-    if @article.user_id == @current_user_id
-      @article.update_attributes(article_params)
-
-      render :show
+    if @article.user_id == current_user.id
+      if @article.update(article_params)
+        render json: @article
+      else
+        render json: { errors: @article.errors }, status: :unprocessable_entity
+      end
     else
       render json: { errors: { article: ['not owned by user'] } }, status: :forbidden
     end
@@ -58,10 +61,9 @@ class ArticlesController < ApplicationController
   def destroy
     @article = Article.find_by_slug!(params[:slug])
 
-    if @article.user_id == @current_user_id
+    if @article.user_id == current_user.id
       @article.destroy
-
-      render json: {}
+      head :no_content
     else
       render json: { errors: { article: ['not owned by user'] } }, status: :forbidden
     end
