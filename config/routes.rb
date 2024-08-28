@@ -19,6 +19,12 @@ Rails.application.routes.draw do
     resources :tags, only: [:index]
   end
 
+  # config/routes.rb
+Rails.application.routes.draw do
+  root 'home#index'
+  resources :articles, only: [:new, :create, :show]
+end
+
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 

@@ -1,5 +1,5 @@
 # This migration comes from acts_as_taggable_on_engine (originally 1)
-class ActsAsTaggableOnMigration < ActiveRecord::Migration
+class ActsAsTaggableOnMigration < ActiveRecord::Migration[6.1]
   def self.up
     create_table :tags do |t|
       t.string :name
@@ -20,8 +20,9 @@ class ActsAsTaggableOnMigration < ActiveRecord::Migration
       t.datetime :created_at
     end
 
-    add_index :taggings, :tag_id
-    add_index :taggings, [:taggable_id, :taggable_type, :context]
+    # Check if the index already exists before trying to add it
+    add_index :taggings, :tag_id unless index_exists?(:taggings, :tag_id)
+    add_index :taggings, [:taggable_id, :taggable_type, :context] unless index_exists?(:taggings, [:taggable_id, :taggable_type, :context])
   end
 
   def self.down
