@@ -1,3 +1,10 @@
+#　あとで削除する項目
+
+## ユーザー認証がいらないアクション一覧からnewアクションを除外する。
+class ArticlesController < ApplicationController
+  before_action :authenticate_user!, except: [:index, :show, :new]  # newを追加
+
+
 # ![Rails Example App](project-logo.png)
 
 > Example Rails codebase that adheres to the [RealWorld](https://github.com/gothinkster/realworld-example-apps) API spec.

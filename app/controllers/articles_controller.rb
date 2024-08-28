@@ -1,5 +1,5 @@
 class ArticlesController < ApplicationController
-  before_action :authenticate_user!, except: [:index, :show]
+  before_action :authenticate_user!, except: [:index, :show, :new]
 
   def index
     @articles = Article.all.includes(:user)
@@ -32,6 +32,11 @@ class ArticlesController < ApplicationController
     else
       render json: { errors: @article.errors }, status: :unprocessable_entity
     end
+  end
+
+  def new
+    @article = Article.new
+    render 'edit'  # edit.html.erb を使用するように指定
   end
 
   def show
