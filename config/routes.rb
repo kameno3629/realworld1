@@ -22,5 +22,28 @@ Rails.application.routes.draw do
     end
 
     resources :tags, only: [:index] # タグの一覧を取得するルート
+
+    # Expressのルーティングに相当する部分
+    # タグコントローラー
+    resources :tags, only: [:index, :create, :destroy, :update]
+    # 記事コントローラー
+    resources :articles do
+      resources :comments, only: [:create, :index, :destroy]
+      member do
+        post :favorite
+        delete :unfavorite
+      end
+    end
+    # プロファイルコントローラー
+    resources :profiles, only: [:show, :update] do
+      member do
+        post :follow
+        delete :unfollow
+      end
+    end
+    # 認証コントローラー
+    post 'register', to: 'auth#register'
+    post 'login', to: 'auth#login'
+    delete 'logout', to: 'auth#logout'
   end
 end
