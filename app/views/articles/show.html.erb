@@ -1,0 +1,99 @@
+<!-- app/views/articles/show.html.erb -->
+<div class="article-page">
+  <div class="banner">
+    <div class="container">
+      <h1><%= @article.title %></h1> <!-- 記事のタイトルを動的に表示 -->
+
+      <!-- ユーザー情報がある場合のみ表示する -->
+      <% if @article.user.present? %>
+        <div class="article-meta">
+          <!-- コメントアウトされたユーザー情報の表示部分 -->
+          <div class="info">
+            <!-- コメントアウトされたユーザー情報の表示部分 -->
+          </div>
+          <button class="btn btn-sm btn-outline-secondary">
+            <i class="ion-plus-round"></i>
+            &nbsp; Follow <span class="counter">(10)</span>
+          </button>
+          &nbsp;&nbsp;
+          <button class="btn btn-sm btn-outline-primary">
+            <i class="ion-heart"></i>
+            &nbsp; Favorite Post <span class="counter">(29)</span>
+          </button>
+          <button class="btn btn-sm btn-outline-secondary">
+            <i class="ion-edit"></i> Edit Article
+          </button>
+          <button class="btn btn-sm btn-outline-danger">
+            <i class="ion-trash-a"></i> Delete Article
+          </button>
+        </div>
+      <% else %>
+        <p>ユーザー情報がありません。</p> <!-- ユーザー情報がない場合の表示 -->
+      <% end %>
+    </div>
+  </div>
+
+  <div class="container page">
+    <div class="row article-content">
+      <div class="col-md-12">
+        <p><%= @article.body %></p> <!-- 記事の本文を動的に表示 -->
+        <h2 id="introducing-ionic">Introducing RealWorld.</h2>
+        <p>It's a great solution for learning how other frameworks work.</p>
+        <ul class="tag-list">
+          <% @article.tags.each do |tag| %> <!-- タグを動的に表示 -->
+            <li class="tag-default tag-pill tag-outline"><%= tag.name %></li>
+          <% end %>
+        </ul>
+      </div>
+    </div>
+
+    <hr />
+
+    <div class="article-actions">
+      <!-- ユーザー情報がある場合のみ表示する -->
+      <% if @article.user.present? %>
+        <div class="article-meta">
+          <!-- コメントアウトされたユーザー情報の表示部分 -->
+          <div class="info">
+            <!-- コメントアウトされたユーザー情報の表示部分 -->
+          </div>
+
+          <button class="btn btn-sm btn-outline-secondary">
+            <i class="ion-plus-round"></i>
+            &nbsp; Follow
+          </button>
+          &nbsp;
+          <button class="btn btn-sm btn-outline-primary">
+            &nbsp; Favorite Article <span class="counter">(29)</span>
+          </button>
+          <button class="btn btn-sm btn-outline-secondary">
+            <i the="ion-edit"></i> Edit Article
+          </button>
+          <button class="btn btn-sm btn-outline-danger">
+            <i the="ion-trash-a"></i> Delete Article
+          </button>
+        </div>
+      <% else %>
+        <p>ユーザー情報がありません。</p> <!-- ユーザー情報がない場合の表示 -->
+      <% end %>
+    </div>
+
+    <div class="row">
+      <div class="col-xs-12 col-md-8 offset-md-2">
+        <%= form_with(model: [@article, Comment.new], local: true) do |form| %>
+          <div class="card-block">
+            <%= form.text_area :body, placeholder: "Write a comment...", rows: 3, class: "form-control" %>
+          </div>
+          <div class="card-footer">
+            <% if user_signed_in? %>
+              <img src="<%= current_user.profile_image_url %>" class="comment-author-img" />
+              <%= form.submit "Post Comment", class: "btn btn-sm btn-primary" %>
+            <% else %>
+              <p>ログインしてコメントを投稿してください。</p>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
