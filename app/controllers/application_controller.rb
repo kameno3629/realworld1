@@ -6,14 +6,21 @@ class ApplicationController < ActionController::Base
   respond_to :json
 
   before_action :underscore_params!
+
+  # パラメータのキーをアンダースコアスタイルに変換
+  before_action :underscore_params!
+  # Deviseコントローラーでのみ実行
+  before_action :configure_permitted_parameters, if: :devise_controller?
+
   # before_action :configure_permitted_parameters, if: :devise_controller?
   # before_action :authenticate_user
 
   private
 
-  # def configure_permitted_parameters
-  #   devise_parameter_sanitizer.permit(:sign_up, keys: [:username])
-  # end
+  # Deviseのストロングパラメータを設定
+  def configure_permitted_parameters
+    devise_parameter_sanitizer.permit(:sign_up, keys: [:username])
+  end
 
   # def authenticate_user
   #   if request.headers['Authorization'].present?

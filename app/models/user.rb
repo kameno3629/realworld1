@@ -36,4 +36,9 @@ class User < ActiveRecord::Base
   def favorited?(article)
     favorites.find_by(article_id: article.id).present?
   end
+
+  # プロフィール画像のURLを返すメソッド
+  def profile_image_url
+    image || "default_profile_image_url_here"
+  end
 end

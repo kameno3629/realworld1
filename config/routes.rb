@@ -1,6 +1,17 @@
 Rails.application.routes.draw do
   root 'home#index'
 
+  devise_for :users, skip: [:sessions, :registrations]
+
+  # Deviseのスコープを定義
+  devise_scope :user do
+    get '/login', to: 'sessions#new', as: :login
+    post '/login', to: 'sessions#create', as: :user_session
+    delete '/logout', to: 'sessions#destroy', as: :logout
+    get '/register', to: 'users#new', as: :register
+    post '/users', to: 'users#create', as: :users
+  end
+
   scope :api, defaults: { format: :json } do
     devise_for :users, controllers: { sessions: :sessions },
                        path_names: { sign_in: :login }
@@ -25,7 +36,4 @@ Rails.application.routes.draw do
   # スラッグを使用するためのルーティングを追加
   # 重複を避けるために名前を変更
   get '/articles/:slug', to: 'articles#show', as: :article_with_slug
-
-  # 新規作成と表示のためのルーティング
-  resources :articles, only: [:create]
 end
