@@ -1,4 +1,4 @@
-class Article < ActiveRecord::Base
+class Article < ApplicationRecord
   belongs_to :user
   has_many :favorites, dependent: :destroy
   has_many :comments, dependent: :destroy
@@ -12,9 +12,19 @@ class Article < ActiveRecord::Base
   validates :body, presence: true, allow_blank: false
   validates :slug, uniqueness: true, exclusion: { in: ['feed'] }
 
-  has_many :articles, dependent: :destroy
+  before_validation :generate_slug, if: :title_changed?
 
-  before_validation do
-    self.slug ||= "#{title.to_s.parameterize}-#{rand(36**6).to_s(36)}"
+  private
+
+  def generate_slug
+    if title.present?
+      base_slug = title.parameterize
+      self.slug = base_slug
+      count = 2
+      while Article.exists?(slug: slug)
+        self.slug = "#{base_slug}-#{count}"
+        count += 1
+      end
+    end
   end
 end

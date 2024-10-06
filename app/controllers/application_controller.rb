@@ -6,8 +6,8 @@ class ApplicationController < ActionController::Base
   respond_to :json
 
   before_action :underscore_params!
-  before_action :configure_permitted_parameters, if: :devise_controller?
-  before_action :authenticate_user
+  # before_action :configure_permitted_parameters, if: :devise_controller?
+  # before_action :authenticate_user
 
   private
 
@@ -15,6 +15,7 @@ class ApplicationController < ActionController::Base
     devise_parameter_sanitizer.permit(:sign_up, keys: [:username])
   end
 
+=begin
   def authenticate_user
     if request.headers['Authorization'].present?
       authenticate_or_request_with_http_token do |token|
@@ -40,6 +41,7 @@ class ApplicationController < ActionController::Base
   def signed_in?
     @current_user_id.present?
   end
+=end
 
   def underscore_params!
     params.deep_transform_keys!(&:underscore)

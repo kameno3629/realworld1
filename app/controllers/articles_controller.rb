@@ -1,5 +1,6 @@
 class ArticlesController < ApplicationController
-  before_action :authenticate_user!, except: [:index, :show, :new]
+  skip_before_action :verify_authenticity_token, only: [:create, :destroy, :update]
+  before_action :set_article, only: [:destroy, :update]
 
   def index
     @articles = Article.all.includes(:user)
@@ -25,10 +26,10 @@ class ArticlesController < ApplicationController
 
   def create
     @article = Article.new(article_params)
-    @article.user = current_user
+#    @article.user = current_user
 
     if @article.save
-      render :show
+      render 'show'
     else
       render json: { errors: @article.errors }, status: :unprocessable_entity
     end
@@ -46,24 +47,20 @@ class ArticlesController < ApplicationController
   def update
     @article = Article.find_by_slug!(params[:slug])
 
-    if @article.user_id == @current_user_id
-      @article.update_attributes(article_params)
+    # if @article.user_id == @current_user_id
+    if @article.update(article_params)
 
       render :show
     else
-      render json: { errors: { article: ['not owned by user'] } }, status: :forbidden
+      render json: { errors: @article.errors }, status: :unprocessable_entity
     end
   end
 
   def destroy
-    @article = Article.find_by_slug!(params[:slug])
-
-    if @article.user_id == @current_user_id
-      @article.destroy
-
-      render json: {}
+    if @article.destroy
+      render json: {}, status: :ok
     else
-      render json: { errors: { article: ['not owned by user'] } }, status: :forbidden
+      render json: { errors: @article.errors }, status: :unprocessable_entity
     end
   end
 
@@ -71,5 +68,9 @@ class ArticlesController < ApplicationController
 
   def article_params
     params.require(:article).permit(:title, :body, :description, tag_list: [])
+  end
+
+  def set_article
+    @article = Article.find_by_slug!(params[:slug])
   end
 end
