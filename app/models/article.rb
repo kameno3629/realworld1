@@ -6,7 +6,7 @@ class Article < ApplicationRecord
   scope :authored_by, ->(username) { where(user: User.where(username: username)) }
   scope :favorited_by, -> (username) { joins(:favorites).where(favorites: { user: User.where(username: username) }) }
 
-  acts_as_taggable
+  acts_as_taggable_on :tags
 
   validates :title, presence: true, allow_blank: false
   validates :body, presence: true, allow_blank: false

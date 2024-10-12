@@ -29,6 +29,7 @@ gem 'puma'
 
 group :development, :test do
   gem 'byebug'
+  gem 'rspec-rails', '~> 5.0'
 end
 
 group :development do

@@ -26,10 +26,10 @@ class ArticlesController < ApplicationController
 
   def create
     @article = Article.new(article_params)
-#    @article.user = current_user
+    # @article.user = current_user  # 認証が不要ならこの行は不要
 
     if @article.save
-      render 'show'
+      render 'show', status: :created  # ステータスを :created に設定
     else
       render json: { errors: @article.errors }, status: :unprocessable_entity
     end
