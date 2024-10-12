@@ -42,6 +42,11 @@ class ArticlesController < ApplicationController
 
   def show
     @article = Article.find_by_slug!(params[:slug])
+    
+    respond_to do |format|
+      format.json { render json: @article }
+      format.html { render :show } # HTMLテンプレートがある場合
+    end
   end
 
   def update

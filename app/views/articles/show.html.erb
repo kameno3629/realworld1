@@ -4,14 +4,10 @@
       <h1><%= @article.title %></h1>
 
       <div class="article-meta">
-        <a href="/profile/<%= @article.user.username %>"><img src="<%= @article.user.profile_image_url %>" /></a>
-        <div class="info">
-          <a href="/profile/<%= @article.user.username %>" class="author"><%= @article.user.username %></a>
-          <span class="date"><%= @article.created_at.strftime("%B %d, %Y") %></span>
-        </div>
+        <span class="date"><%= @article.created_at.strftime("%B %d, %Y") %></span>
         <button class="btn btn-sm btn-outline-secondary">
           <i class="ion-plus-round"></i>
-          &nbsp; Follow <%= @article.user.username %> <span class="counter">(10)</span>
+          &nbsp; Follow Author <span class="counter">(10)</span>
         </button>
         &nbsp;&nbsp;
         <button class="btn btn-sm btn-outline-primary">
@@ -46,15 +42,10 @@
 
     <div class="article-actions">
       <div class="article-meta">
-        <a href="/profile/<%= @article.user.username %>"><img src="<%= @article.user.profile_image_url %>" /></a>
-        <div class="info">
-          <a href="/profile/<%= @article.user.username %>" class="author"><%= @article.user.username %></a>
-          <span class="date"><%= @article.created_at.strftime("%B %d, %Y") %></span>
-        </div>
-
+        <span class="date"><%= @article.created_at.strftime("%B %d, %Y") %></span>
         <button class="btn btn-sm btn-outline-secondary">
           <i class="ion-plus-round"></i>
-          &nbsp; Follow <%= @article.user.username %>
+          &nbsp; Follow Author
         </button>
         &nbsp;
         <button class="btn btn-sm btn-outline-primary">

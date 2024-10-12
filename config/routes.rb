@@ -20,5 +20,7 @@ Rails.application.routes.draw do
 
   # ホームページへのルート
   root 'home#index'
-  resources :articles, only: [:new, :create, :show]
+  
+  # 追加: 単数形のルートが必要な場合
+  get '/article/:slug', to: 'articles#show', as: :article_show
 end
